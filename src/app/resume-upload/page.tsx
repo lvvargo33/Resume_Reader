@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import Layout from '@/components/Layout'
 
 interface ParsedData {
   fileName: string
@@ -79,17 +79,14 @@ export default function ResumeUpload() {
 
   if (parsedData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                Resume Parsed Successfully!
-              </h1>
-              <p className="text-gray-600">
-                Here&apos;s what we extracted from your resume
-              </p>
-            </div>
+      <Layout 
+        title="Resume Analysis Complete!" 
+        description="Here's what we extracted from your resume"
+        showBackButton={true}
+        backHref="/resume-upload"
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-8">
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               {/* File Info */}
@@ -212,31 +209,20 @@ export default function ResumeUpload() {
               >
                 Upload Another Resume
               </button>
-              <Link
-                href="/"
-                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-              >
-                Back to Home
-              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Resume Analysis Tool
-            </h1>
-            <p className="text-gray-600">
-              Upload your resume and get instant insights into what employers see
-            </p>
-          </div>
+    <Layout 
+      title="Resume Analysis Tool" 
+      description="Upload your resume and get instant insights into what employers see"
+    >
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg p-8">
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -256,7 +242,7 @@ export default function ResumeUpload() {
 
             <div>
               <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-2">
-                Resume File (PDF or Word)
+                Resume File (Word documents work best)
               </label>
               <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                 <div className="space-y-1 text-center">
@@ -291,7 +277,7 @@ export default function ResumeUpload() {
                     </label>
                     <p className="pl-1">or drag and drop</p>
                   </div>
-                  <p className="text-xs text-gray-500">PDF, DOC, DOCX up to 5MB</p>
+                  <p className="text-xs text-gray-500">DOC, DOCX, PDF up to 5MB (Word docs work best)</p>
                   {file && (
                     <p className="text-sm text-green-600 mt-2">
                       Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)
@@ -316,16 +302,8 @@ export default function ResumeUpload() {
             </button>
           </form>
 
-          <div className="mt-8 text-center">
-            <Link
-              href="/"
-              className="text-primary-600 hover:text-primary-700 font-semibold"
-            >
-              ← Back to Home
-            </Link>
-          </div>
         </div>
       </div>
-    </div>
+    </Layout>
   )
 }

@@ -28,14 +28,11 @@
     "mammoth": "^1.9.1",
     "multer": "^2.0.1",
     "next": "^15.4.1",
-    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^5.3.93",
     "postcss": "^8.5.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3"
-  },
-  "devDependencies": {
-    "@types/pdf-parse": "^1.1.5"
   }
 }

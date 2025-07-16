@@ -48,10 +48,9 @@ export async function parseResume(
   
   try {
     if (mimeType === 'application/pdf') {
-      // Dynamic import for pdf-parse to avoid build-time issues
-      const pdfParse = (await import('pdf-parse')).default
-      const pdfData = await pdfParse(buffer)
-      text = pdfData.text
+      // For now, return a placeholder for PDF parsing
+      // TODO: Implement server-safe PDF parsing
+      text = 'PDF parsing is temporarily disabled. Please upload a Word document (.docx) for full parsing capabilities, or use this as a placeholder for PDF content extraction.'
     } else if (
       mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       mimeType === 'application/msword'
