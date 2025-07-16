@@ -18,13 +18,11 @@
 6. ✅ Complete architecture documentation
 
 ## Recent Decisions
+- `643c6d1`: feat: implement Resume Reader career guidance platform MVP...
+- `ee5747a`: -...
 - Microservices architecture with domain-driven design
 - Multi-language backend: Node.js/TypeScript, Python, Go
 - PostgreSQL + Redis + Weaviate + Neo4j polyglot persistence
-- Kubernetes with Istio service mesh
-- Privacy-by-design with GDPR compliance
-- Vector embeddings for skill matching
-- TensorFlow/PyTorch for ML/AI pipeline
 
 ## Tech Stack (Finalized)
 - **Backend**: Node.js/TypeScript (APIs), Python (ML/AI), Go (Performance)

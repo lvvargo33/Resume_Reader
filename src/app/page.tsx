@@ -9,7 +9,7 @@ export default function Home() {
             Unlock Your Career Potential
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Get personalized career guidance and discover if you're ready for entrepreneurship. 
+            Get personalized career guidance and discover if you&apos;re ready for entrepreneurship. 
             Our AI-powered platform analyzes your skills and experience to provide actionable insights.
           </p>
           

@@ -23,7 +23,7 @@ const questions = [
       { value: 2, label: 'Rarely - Only when asked' },
       { value: 3, label: 'Sometimes - When the situation calls for it' },
       { value: 4, label: 'Often - I naturally step up' },
-      { value: 5, label: 'Always - I\'m always the leader' }
+      { value: 5, label: 'Always - I&apos;m always the leader' }
     ]
   },
   {

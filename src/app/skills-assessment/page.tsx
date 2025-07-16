@@ -145,7 +145,7 @@ export default function SkillsAssessment() {
                 📊 Want to know the salary impact?
               </h3>
               <p className="text-yellow-700 mb-4">
-                This free assessment shows you what skills to focus on, but doesn't include salary data. 
+                This free assessment shows you what skills to focus on, but doesn&apos;t include salary data. 
                 For detailed salary insights, market trends, and a personalized learning roadmap:
               </p>
               <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold">
@@ -176,7 +176,7 @@ export default function SkillsAssessment() {
               Skills Assessment for Career Advancement
             </h1>
             <p className="text-gray-600">
-              Tell us about your current situation and we'll identify the top 3 skills 
+              Tell us about your current situation and we&apos;ll identify the top 3 skills 
               that will have the biggest impact on your career growth.
             </p>
           </div>
