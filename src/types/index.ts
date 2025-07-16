@@ -7,6 +7,11 @@ export interface FreemiumUser {
   updatedAt: Date
   hasUsedEntrepreneurAssessment: boolean
   hasUsedSkillsAssessment: boolean
+  currentRole?: string
+  industry?: string
+  yearsExperience?: number
+  educationLevel?: string
+  entrepreneurialInterest?: boolean
 }
 
 export interface FreemiumProfile {
@@ -19,11 +24,13 @@ export interface FreemiumProfile {
 }
 
 export interface ClientProfile {
+  id?: string
   userId: string
   fullName: string
   email: string
   phone?: string
   resumeText?: string
+  resumeFileUrl?: string
   skills: Skill[]
   careerEvents: CareerEvent[]
   education: Education[]

@@ -26,6 +26,12 @@ export default function Home() {
             >
               Top 3 Skills for Advancement
             </Link>
+            <Link
+              href="/resume-upload"
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors"
+            >
+              Upload & Analyze Resume
+            </Link>
           </div>
         </div>
 

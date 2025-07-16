@@ -95,7 +95,7 @@ export default function SkillsAssessment() {
     
     const skillRecs = roleCategory === 'other' 
       ? skillRecommendations.other 
-      : skillRecommendations[roleCategory as keyof typeof skillRecommendations][experienceLevel as keyof any]
+      : (skillRecommendations as any)[roleCategory][experienceLevel]
     
     // Save assessment to database
     try {

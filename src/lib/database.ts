@@ -345,12 +345,15 @@ export async function getDashboardStats() {
       supabase.from('skills_assessments').select('*', { count: 'exact', head: true })
     ])
 
+    const leadsCount = totalLeads || 0
+    const clientsCount = totalClients || 0
+    
     return {
-      totalLeads: totalLeads || 0,
-      totalClients: totalClients || 0,
+      totalLeads: leadsCount,
+      totalClients: clientsCount,
       entrepreneurAssessments: entrepreneurAssessments || 0,
       skillsAssessments: skillsAssessments || 0,
-      conversionRate: totalLeads > 0 ? ((totalClients || 0) / (totalLeads || 1)) * 100 : 0
+      conversionRate: leadsCount > 0 ? (clientsCount / leadsCount) * 100 : 0
     }
   } catch (error) {
     console.error('Error fetching dashboard stats:', error)
