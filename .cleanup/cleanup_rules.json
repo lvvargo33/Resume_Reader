@@ -1,0 +1,35 @@
+{
+  "cleanup_rules": {
+    "test_files": {
+      "patterns": ["test_*.py", "*.test.js", "tmp_*", "temp_*"],
+      "exclude": ["test_suite/*", "tests/*"],
+      "max_age_days": 7
+    },
+    "generated_files": {
+      "patterns": ["*.log", "*.tmp", ".cache/*", "*.pyc", "__pycache__"],
+      "exclude": ["important.log", "session.log"],
+      "max_age_days": 3
+    },
+    "experimental_files": {
+      "patterns": ["experiment_*", "draft_*", "old_*"],
+      "exclude": [],
+      "max_age_days": 14
+    },
+    "empty_directories": {
+      "enabled": true,
+      "exclude": ["src", "docs", "tests"]
+    }
+  },
+  "protected_paths": [
+    "README.md",
+    "SESSION_LOG.md",
+    "PROJECT_STATUS.md",
+    ".git",
+    ".github",
+    "docs/",
+    "src/",
+    "requirements.txt",
+    "package.json"
+  ],
+  "cleanup_schedule": "weekly"
+}

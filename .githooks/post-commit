@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+"""
+Git hook to update SESSION_LOG.md after commit
+"""
+
+import subprocess
+import os
+import json
+from datetime import datetime
+import re
+
+def get_commit_info():
+    """Get the latest commit information"""
+    commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()[:7]
+    commit_msg = subprocess.check_output(['git', 'log', '-1', '--pretty=%B']).decode().strip()
+    author = subprocess.check_output(['git', 'log', '-1', '--pretty=%an']).decode().strip()
+    files_changed = subprocess.check_output(['git', 'diff', '--name-only', 'HEAD~1', 'HEAD']).decode().strip().split('\n')
+    
+    return {
+        'hash': commit_hash,
+        'message': commit_msg,
+        'author': author,
+        'files': [f for f in files_changed if f]  # Remove empty strings
+    }
+
+def extract_session_info(commit_msg):
+    """Extract session information from commit message"""
+    session_info = {
+        'what_was_done': [],
+        'key_decisions': [],
+        'next_steps': [],
+        'technical_notes': []
+    }
+    
+    # Parse the commit message for session update sections
+    sections = {
+        'What was done:': 'what_was_done',
+        'Key decisions:': 'key_decisions',
+        'Next steps:': 'next_steps',
+        'Technical notes:': 'technical_notes'
+    }
+    
+    current_section = None
+    for line in commit_msg.split('\n'):
+        line = line.strip()
+        
+        # Check if this line starts a new section
+        for section_marker, section_key in sections.items():
+            if section_marker in line:
+                current_section = section_key
+                break
+        else:
+            # If we're in a section and the line starts with -, add it
+            if current_section and line.startswith('-'):
+                content = line[1:].strip()
+                if content:  # Only add non-empty items
+                    session_info[current_section].append(content)
+    
+    return session_info
+
+def update_session_log():
+    """Update SESSION_LOG.md with commit information"""
+    session_log_path = 'SESSION_LOG.md'
+    
+    # Get commit information
+    commit_info = get_commit_info()
+    session_info = extract_session_info(commit_info['message'])
+    
+    # Read current session log
+    with open(session_log_path, 'r') as f:
+        content = f.read()
+    
+    # Find the last session marker
+    last_session_match = re.search(r'### Session \d+', content)
+    if last_session_match:
+        last_session_num = int(re.search(r'\d+', last_session_match.group()).group())
+        new_session_num = last_session_num + 1
+    else:
+        new_session_num = 2
+    
+    # Create new session entry
+    new_entry = f"""
+
+### Session {new_session_num} - [Date: {datetime.now().strftime('%Y-%m-%d')}]
+**Commit**: `{commit_info['hash']}` - {commit_info['message'].split('\\n')[0]}
+**Focus**: Development progress
+"""
+    
+    # Add what was done
+    if session_info['what_was_done']:
+        new_entry += "\n**What was done**:\n"
+        for item in session_info['what_was_done']:
+            new_entry += f"- {item}\n"
+    
+    # Add key decisions
+    if session_info['key_decisions']:
+        new_entry += "\n**Key Decisions**:\n"
+        for item in session_info['key_decisions']:
+            new_entry += f"- {item}\n"
+    
+    # Add technical notes
+    if session_info['technical_notes']:
+        new_entry += "\n**Technical Notes**:\n"
+        for item in session_info['technical_notes']:
+            new_entry += f"- {item}\n"
+    
+    # Add files changed
+    if commit_info['files']:
+        new_entry += f"\n**Files Modified**: {len(commit_info['files'])} files\n"
+        for file in commit_info['files'][:5]:  # Show first 5 files
+            new_entry += f"- `{file}`\n"
+        if len(commit_info['files']) > 5:
+            new_entry += f"- ... and {len(commit_info['files']) - 5} more\n"
+    
+    # Add next steps
+    if session_info['next_steps']:
+        new_entry += "\n**Next Steps**:\n"
+        for item in session_info['next_steps']:
+            new_entry += f"- [ ] {item}\n"
+    
+    new_entry += "\n---"
+    
+    # Insert before the "Future sessions" comment
+    future_marker = "<!-- Future sessions will be added below -->"
+    if future_marker in content:
+        content = content.replace(future_marker, new_entry + "\n" + future_marker)
+    else:
+        content += new_entry
+    
+    # Write updated content
+    with open(session_log_path, 'w') as f:
+        f.write(content)
+    
+    print(f"✅ SESSION_LOG.md updated with session {new_session_num}")
+    
+    # Also update PROJECT_STATUS.md with recent commit
+    update_project_status(commit_info)
+
+def update_project_status(commit_info):
+    """Update PROJECT_STATUS.md with latest commit info"""
+    status_path = 'PROJECT_STATUS.md'
+    
+    if os.path.exists(status_path):
+        with open(status_path, 'r') as f:
+            content = f.read()
+        
+        # Update recent decisions section
+        decisions_marker = "## Recent Decisions"
+        if decisions_marker in content:
+            # Find the line after Recent Decisions and insert the latest commit
+            lines = content.split('\n')
+            for i, line in enumerate(lines):
+                if line.strip() == decisions_marker:
+                    # Insert after the header
+                    commit_line = f"- `{commit_info['hash']}`: {commit_info['message'].split(chr(10))[0][:60]}..."
+                    lines.insert(i + 1, commit_line)
+                    # Keep only last 5 commits
+                    decision_end = i + 6
+                    while decision_end < len(lines) and lines[decision_end].startswith('-'):
+                        decision_end += 1
+                    lines = lines[:i+6] + lines[decision_end:]
+                    break
+            
+            content = '\n'.join(lines)
+            
+            with open(status_path, 'w') as f:
+                f.write(content)
+
+if __name__ == "__main__":
+    try:
+        update_session_log()
+    except Exception as e:
+        print(f"⚠️  Error updating session log: {e}")
+        # Don't fail the commit
+        exit(0)
