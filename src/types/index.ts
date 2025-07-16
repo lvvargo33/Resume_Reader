@@ -111,10 +111,27 @@ export interface SkillsAssessment {
   currentRole: string
   industry: string
   yearsExperience: number
+  careerGoals?: string
   topSkills: {
     skill: string
     impact: string
     priority: number
   }[]
   completedAt: Date
+}
+
+export interface LeadInteraction {
+  id: string
+  userId: string
+  interactionType: 'assessment_completed' | 'email_sent' | 'consultation_scheduled' | 'converted_to_client'
+  interactionData?: any
+  createdAt: Date
+}
+
+export interface DashboardStats {
+  totalLeads: number
+  totalClients: number
+  entrepreneurAssessments: number
+  skillsAssessments: number
+  conversionRate: number
 }

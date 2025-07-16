@@ -83,12 +83,55 @@ export default function EntrepreneurAssessment() {
     }
   }
 
-  const calculateScore = () => {
+  const calculateScore = async () => {
     const totalScore = Object.values(responses).reduce((sum, score) => sum + score, 0)
     const maxScore = questions.length * 5
     const percentage = Math.round((totalScore / maxScore) * 100)
     setScore(percentage)
+    
+    // Save assessment to database
+    try {
+      const response = await fetch('/api/assessments/entrepreneur', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          responses,
+          score: percentage,
+          recommendations: generateRecommendations(percentage)
+        })
+      })
+      
+      if (!response.ok) {
+        console.error('Failed to save assessment')
+      }
+    } catch (error) {
+      console.error('Error saving assessment:', error)
+    }
+    
     setShowResults(true)
+  }
+  
+  const generateRecommendations = (score: number): string[] => {
+    const recommendations: string[] = []
+    
+    if (score >= 80) {
+      recommendations.push('Consider starting your business venture soon')
+      recommendations.push('Focus on market research and business plan development')
+      recommendations.push('Network with other entrepreneurs and potential investors')
+    } else if (score >= 60) {
+      recommendations.push('Work on developing stronger leadership skills')
+      recommendations.push('Build a larger professional network')
+      recommendations.push('Consider taking entrepreneurship courses or workshops')
+    } else {
+      recommendations.push('Focus on building core business skills')
+      recommendations.push('Gain more experience in your current field')
+      recommendations.push('Consider starting with a side project to test ideas')
+    }
+    
+    return recommendations
   }
 
   const getScoreMessage = (score: number) => {

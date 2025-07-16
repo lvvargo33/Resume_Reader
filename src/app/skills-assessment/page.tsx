@@ -73,7 +73,7 @@ export default function SkillsAssessment() {
   const [showResults, setShowResults] = useState(false)
   const [recommendations, setRecommendations] = useState<any[]>([])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     // Simple logic to determine skill recommendations
@@ -96,6 +96,30 @@ export default function SkillsAssessment() {
     const skillRecs = roleCategory === 'other' 
       ? skillRecommendations.other 
       : skillRecommendations[roleCategory as keyof typeof skillRecommendations][experienceLevel as keyof any]
+    
+    // Save assessment to database
+    try {
+      const response = await fetch('/api/assessments/skills', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          currentRole: formData.currentRole,
+          industry: formData.industry,
+          yearsExperience: formData.yearsExperience,
+          careerGoals: formData.careerGoals,
+          topSkills: skillRecs
+        })
+      })
+      
+      if (!response.ok) {
+        console.error('Failed to save skills assessment')
+      }
+    } catch (error) {
+      console.error('Error saving skills assessment:', error)
+    }
     
     setRecommendations(skillRecs)
     setShowResults(true)
