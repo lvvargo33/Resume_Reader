@@ -48,9 +48,73 @@ export async function parseResume(
   
   try {
     if (mimeType === 'application/pdf') {
-      // For now, return a placeholder for PDF parsing
-      // TODO: Implement server-safe PDF parsing
-      text = 'PDF parsing is temporarily disabled. Please upload a Word document (.docx) for full parsing capabilities, or use this as a placeholder for PDF content extraction.'
+      // Parse PDF using pdfreader library
+      try {
+        const { PdfReader } = await import('pdfreader')
+        
+        return new Promise<ParsedResume>((resolve, reject) => {
+          const textItems: { text: string, y: number, x: number }[] = []
+          
+          new PdfReader().parseBuffer(buffer, (err: any, item: any) => {
+            if (err) {
+              reject(new Error('PDF parsing failed: ' + err.message))
+              return
+            }
+            
+            if (!item) {
+              // End of document - sort by position and join with proper spacing
+              textItems.sort((a, b) => {
+                // Sort by y position (top to bottom), then x position (left to right)
+                if (Math.abs(a.y - b.y) < 0.1) {
+                  return a.x - b.x
+                }
+                return b.y - a.y
+              })
+              
+              let extractedText = ''
+              let lastY = -1
+              
+              for (const item of textItems) {
+                if (lastY !== -1 && Math.abs(item.y - lastY) > 0.1) {
+                  // New line
+                  extractedText += '\n'
+                } else if (extractedText && !extractedText.endsWith(' ')) {
+                  // Same line, add space
+                  extractedText += ' '
+                }
+                extractedText += item.text
+                lastY = item.y
+              }
+              
+              const extractedData = extractResumeData(extractedText.trim())
+              
+              resolve({
+                text: extractedText.trim(),
+                metadata: {
+                  fileName,
+                  fileSize: buffer.length,
+                  fileType: mimeType,
+                  parsedAt: new Date()
+                },
+                extractedData
+              })
+              return
+            }
+            
+            if (item.text) {
+              // Store text with position information
+              textItems.push({
+                text: item.text,
+                y: item.y || 0,
+                x: item.x || 0
+              })
+            }
+          })
+        })
+      } catch (pdfError) {
+        console.error('PDF parsing failed:', pdfError)
+        throw new Error('PDF parsing failed. Please try uploading a Word document instead.')
+      }
     } else if (
       mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       mimeType === 'application/msword'
@@ -89,65 +153,15 @@ function extractResumeData(text: string) {
     education: []
   }
 
-  // Extract email
-  const emailMatch = text.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/)
-  if (emailMatch) {
-    data.email = emailMatch[0]
-  }
-
-  // Extract phone number
-  const phoneMatch = text.match(/(\+?1?[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/)
-  if (phoneMatch) {
-    data.phone = phoneMatch[0]
-  }
-
-  // Extract name (basic heuristic - first line that looks like a name)
-  const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0)
-  for (const line of lines.slice(0, 5)) {
-    if (isLikelyName(line)) {
-      data.name = line
-      break
-    }
-  }
-
-  // Extract skills using common skill keywords
+  // Focus on extracting skills and experience - contact info will come from user input
   data.skills = extractSkills(text)
-
-  // Extract experience sections
   data.experience = extractExperience(text)
-
-  // Extract education
   data.education = extractEducation(text)
-
-  // Extract summary/objective
   data.summary = extractSummary(text)
 
   return data
 }
 
-/**
- * Check if a line is likely to be a person's name
- */
-function isLikelyName(line: string): boolean {
-  // Basic heuristics for name detection
-  const words = line.split(/\s+/)
-  
-  // Should be 2-4 words
-  if (words.length < 2 || words.length > 4) return false
-  
-  // Should not contain common resume keywords
-  const excludeWords = ['resume', 'cv', 'curriculum', 'vitae', 'experience', 'education', 'skills', 'profile']
-  if (excludeWords.some(word => line.toLowerCase().includes(word))) return false
-  
-  // Should not be all caps (likely a section header)
-  if (line === line.toUpperCase()) return false
-  
-  // Should not contain numbers or special characters (except periods and apostrophes)
-  if (/[0-9@#$%^&*()_+=<>?{}|\\~`]/.test(line)) return false
-  
-  // Each word should start with capital letter
-  return words.every(word => /^[A-Z][a-z]*[.]?$/.test(word))
-}
 
 /**
  * Extract skills from resume text
@@ -183,7 +197,9 @@ function extractSkills(text: string): string[] {
 
   skillKeywords.forEach(skill => {
     const skillLower = skill.toLowerCase()
-    if (textLower.includes(skillLower)) {
+    // Use word boundaries to avoid partial matches
+    const regex = new RegExp(`\\b${skillLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i')
+    if (regex.test(text)) {
       foundSkills.push(skill)
     }
   })

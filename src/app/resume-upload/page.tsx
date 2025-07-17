@@ -9,19 +9,80 @@ interface ParsedData {
   parsedAt: string
   textLength: number
   extractedData: {
-    name?: string
-    email?: string
-    phone?: string
-    skills: string[]
-    experience: any[]
-    education: any[]
-    summary?: string
+    personal_info: {
+      name?: string
+      email?: string
+      phone?: string
+      address?: string
+      linkedin?: string
+      website?: string
+      work_authorization?: string
+    }
+    professional_summary?: string
+    hard_skills: {
+      programming_languages: string[]
+      software_applications: string[]
+      platforms_tools: string[]
+      databases: string[]
+      methodologies: string[]
+    }
+    soft_skills: string[]
+    experience: Array<{
+      job_title: string
+      company: string
+      location?: string
+      start_date?: string
+      end_date?: string
+      key_responsibilities: string[]
+      achievements: string[]
+      technologies_used: string[]
+    }>
+    education: Array<{
+      degree: string
+      field_of_study?: string
+      institution: string
+      location?: string
+      graduation_date?: string
+      relevant_coursework: string[]
+      honors: string[]
+      publications: string[]
+    }>
+    certifications: Array<{
+      name: string
+      issuing_organization?: string
+      date_obtained?: string
+      expiration_date?: string
+    }>
+    projects: Array<{
+      name: string
+      description?: string
+      technologies: string[]
+      url?: string
+    }>
+    awards_achievements: Array<{
+      name: string
+      organization?: string
+      date?: string
+      description?: string
+    }>
+    languages: Array<{
+      language: string
+      proficiency?: string
+    }>
+    additional_info: {
+      volunteer_experience: string[]
+      professional_memberships: string[]
+      interests: string[]
+      other_notes: string[]
+    }
   }
 }
 
 export default function ResumeUpload() {
   const [file, setFile] = useState<File | null>(null)
   const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [parsedData, setParsedData] = useState<ParsedData | null>(null)
   const [error, setError] = useState('')
@@ -37,8 +98,8 @@ export default function ResumeUpload() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!file || !email) {
-      setError('Please provide both a file and email address')
+    if (!file || !email || !name) {
+      setError('Please provide a file, name, and email address')
       return
     }
 
@@ -49,6 +110,8 @@ export default function ResumeUpload() {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('email', email)
+      formData.append('name', name)
+      formData.append('phone', phone)
 
       const response = await fetch('/api/resume/parse', {
         method: 'POST',
@@ -73,6 +136,8 @@ export default function ResumeUpload() {
   const resetForm = () => {
     setFile(null)
     setEmail('')
+    setName('')
+    setPhone('')
     setParsedData(null)
     setError('')
   }
@@ -103,25 +168,83 @@ export default function ResumeUpload() {
               <div className="bg-gray-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
                 <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Name:</span> {parsedData.extractedData.name || 'Not found'}</p>
-                  <p><span className="font-medium">Email:</span> {parsedData.extractedData.email || 'Not found'}</p>
-                  <p><span className="font-medium">Phone:</span> {parsedData.extractedData.phone || 'Not found'}</p>
+                  <p><span className="font-medium">Name:</span> {parsedData.extractedData.personal_info.name}</p>
+                  <p><span className="font-medium">Email:</span> {parsedData.extractedData.personal_info.email}</p>
+                  <p><span className="font-medium">Phone:</span> {parsedData.extractedData.personal_info.phone || 'Not provided'}</p>
+                  {parsedData.extractedData.personal_info.address && (
+                    <p><span className="font-medium">Location:</span> {parsedData.extractedData.personal_info.address}</p>
+                  )}
+                  {parsedData.extractedData.personal_info.linkedin && (
+                    <p><span className="font-medium">LinkedIn:</span> {parsedData.extractedData.personal_info.linkedin}</p>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Skills */}
-            {parsedData.extractedData.skills.length > 0 && (
+            {/* Hard Skills */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Technical Skills</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {parsedData.extractedData.hard_skills.programming_languages.length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-2">Programming Languages</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {parsedData.extractedData.hard_skills.programming_languages.map((skill, index) => (
+                        <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {parsedData.extractedData.hard_skills.software_applications.length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-2">Software & Applications</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {parsedData.extractedData.hard_skills.software_applications.map((skill, index) => (
+                        <span key={index} className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {parsedData.extractedData.hard_skills.platforms_tools.length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-2">Platforms & Tools</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {parsedData.extractedData.hard_skills.platforms_tools.map((skill, index) => (
+                        <span key={index} className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {parsedData.extractedData.hard_skills.databases.length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-2">Databases</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {parsedData.extractedData.hard_skills.databases.map((skill, index) => (
+                        <span key={index} className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {parsedData.extractedData.hard_skills.methodologies.length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-2">Methodologies</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {parsedData.extractedData.hard_skills.methodologies.map((skill, index) => (
+                        <span key={index} className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-sm">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Soft Skills */}
+            {parsedData.extractedData.soft_skills.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Detected Skills</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Soft Skills</h3>
                 <div className="flex flex-wrap gap-2">
-                  {parsedData.extractedData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
-                    >
-                      {skill}
-                    </span>
+                  {parsedData.extractedData.soft_skills.map((skill, index) => (
+                    <span key={index} className="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">{skill}</span>
                   ))}
                 </div>
               </div>
@@ -131,18 +254,51 @@ export default function ResumeUpload() {
             {parsedData.extractedData.experience.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Work Experience</h3>
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {parsedData.extractedData.experience.map((exp, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-gray-900">{exp.title}</h4>
-                      <p className="text-gray-600">{exp.company}</p>
-                      {(exp.startDate || exp.endDate) && (
-                        <p className="text-sm text-gray-500">
-                          {exp.startDate} - {exp.endDate || 'Present'}
-                        </p>
+                    <div key={index} className="border border-gray-200 rounded-lg p-6">
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">{exp.job_title}</h4>
+                        <p className="text-gray-600 font-medium">{exp.company}</p>
+                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
+                          {exp.location && <span>{exp.location}</span>}
+                          {(exp.start_date || exp.end_date) && (
+                            <span>{exp.start_date} - {exp.end_date || 'Present'}</span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {exp.key_responsibilities.length > 0 && (
+                        <div className="mb-4">
+                          <h5 className="font-medium text-gray-800 mb-2">Key Responsibilities:</h5>
+                          <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                            {exp.key_responsibilities.map((resp, idx) => (
+                              <li key={idx}>{resp}</li>
+                            ))}
+                          </ul>
+                        </div>
                       )}
-                      {exp.description && (
-                        <p className="text-sm text-gray-700 mt-2">{exp.description}</p>
+                      
+                      {exp.achievements.length > 0 && (
+                        <div className="mb-4">
+                          <h5 className="font-medium text-gray-800 mb-2">Key Achievements:</h5>
+                          <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                            {exp.achievements.map((achievement, idx) => (
+                              <li key={idx}>{achievement}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {exp.technologies_used.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-gray-800 mb-2">Technologies Used:</h5>
+                          <div className="flex flex-wrap gap-2">
+                            {exp.technologies_used.map((tech, idx) => (
+                              <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm">{tech}</span>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   ))}
@@ -226,6 +382,21 @@ export default function ResumeUpload() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                Full Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+
+            <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
@@ -241,8 +412,22 @@ export default function ResumeUpload() {
             </div>
 
             <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number (optional)
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="(555) 123-4567"
+              />
+            </div>
+
+            <div>
               <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-2">
-                Resume File (Word documents work best)
+                Resume File
               </label>
               <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                 <div className="space-y-1 text-center">
@@ -277,7 +462,7 @@ export default function ResumeUpload() {
                     </label>
                     <p className="pl-1">or drag and drop</p>
                   </div>
-                  <p className="text-xs text-gray-500">DOC, DOCX, PDF up to 5MB (Word docs work best)</p>
+                  <p className="text-xs text-gray-500">PDF, DOC, DOCX up to 5MB</p>
                   {file && (
                     <p className="text-sm text-green-600 mt-2">
                       Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)
@@ -295,10 +480,10 @@ export default function ResumeUpload() {
 
             <button
               type="submit"
-              disabled={isLoading || !file || !email}
+              disabled={isLoading || !file || !email || !name}
               className="w-full bg-primary-600 text-white py-3 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Parsing Resume...' : 'Analyze Resume'}
+              {isLoading ? 'Reading Resume...' : 'Analyze Resume'}
             </button>
           </form>
 

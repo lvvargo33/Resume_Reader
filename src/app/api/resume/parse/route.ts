@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { parseResume } from '@/lib/resumeParser'
+import { parseResumeWithClaude } from '@/lib/claudeResumeParser'
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
     const email = formData.get('email') as string
+    const name = formData.get('name') as string
+    const phone = formData.get('phone') as string
 
     if (!file) {
       return NextResponse.json(
@@ -14,9 +17,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!email) {
+    if (!email || !name) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: 'Name and email are required' },
         { status: 400 }
       )
     }
@@ -48,8 +51,17 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-    // Parse the resume
+    // Extract text from the resume first
     const parsedResume = await parseResume(buffer, file.name, file.type)
+    
+    // Use Claude to intelligently extract structured data
+    const claudeResult = await parseResumeWithClaude(
+      parsedResume.text,
+      file.name,
+      buffer.length,
+      file.type,
+      { name, email, phone }
+    )
 
     // TODO: Save parsed resume to database
     // This would involve creating a client profile and storing the resume data
@@ -57,17 +69,37 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        fileName: parsedResume.metadata.fileName,
-        fileSize: parsedResume.metadata.fileSize,
-        parsedAt: parsedResume.metadata.parsedAt,
-        extractedData: parsedResume.extractedData,
-        // Don't return the full text for security/size reasons
-        textLength: parsedResume.text.length
+        fileName: claudeResult.metadata.fileName,
+        fileSize: claudeResult.metadata.fileSize,
+        parsedAt: claudeResult.metadata.parsedAt,
+        extractedData: {
+          ...claudeResult.extractedData,
+          // Override with user-provided contact info for display
+          personal_info: {
+            ...claudeResult.extractedData.personal_info,
+            name: name,
+            email: email,
+            phone: phone || undefined
+          }
+        },
+        textLength: claudeResult.metadata.textLength
       }
     })
 
   } catch (error) {
     console.error('Error parsing resume:', error)
+    
+    // Check if it's a Claude API error
+    if (error instanceof Error && error.message.includes('Failed to parse resume with AI')) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Sorry, please try again later'
+        },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
       { 
         success: false,
