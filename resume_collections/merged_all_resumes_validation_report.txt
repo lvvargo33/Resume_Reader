@@ -1,0 +1,72 @@
+============================================================
+GitHub Resume Collection - Data Validation Report
+Generated: 2025-07-18 19:49:45
+============================================================
+
+OVERALL STATISTICS
+------------------------------
+Total Resumes Processed: 500
+Valid Resumes: 500 (100.0%)
+Invalid Resumes: 0
+Duplicates Found: 0
+
+FIELD COMPLETENESS
+------------------------------
+Name: 97.6%
+Location: 89.8%
+Bio: 99.8%
+Company: 46.0%
+Blog: 57.6%
+Email: 41.6%
+
+TECHNICAL CATEGORIES
+------------------------------
+Technical: 454 (90.8%)
+Semi Technical: 22 (4.4%)
+Non Technical: 24 (4.8%)
+
+EXPERIENCE LEVELS
+------------------------------
+Entry: 13
+Junior: 11
+Mid: 169
+Senior: 122
+Expert: 185
+Unknown: 0
+
+TOP 20 SKILLS
+------------------------------
+HTML: 441
+JavaScript: 438
+CSS: 421
+Python: 364
+Shell: 298
+TypeScript: 274
+Dockerfile: 234
+Makefile: 151
+Java: 128
+Ruby: 123
+C++: 112
+C: 111
+Jupyter Notebook: 101
+SCSS: 101
+Batchfile: 80
+Go: 79
+PHP: 79
+PowerShell: 58
+CMake: 57
+Objective-C: 57
+
+TOP 10 LOCATIONS
+------------------------------
+USA: 115
+Kenya: 17
+India: 12
+CA: 10
+New York: 10
+NY: 10
+Nigeria: 9
+Bangladesh: 8
+UK: 7
+Nairobi: 7
+

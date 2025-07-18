@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-07-18T16:05:36.767270",
+  "tests": [
+    {
+      "test": "homepage_access",
+      "url": "https://indeed.com",
+      "status": "success",
+      "load_time": 0.3489210605621338,
+      "page_title": "Just a moment...",
+      "current_url": "https://indeed.com/",
+      "page_size": 45544,
+      "anti_bot_indicators": {
+        "captcha": true,
+        "blocked": false,
+        "security_check": true,
+        "unusual_traffic": false,
+        "robot_detected": false
+      }
+    },
+    {
+      "test": "resume_search",
+      "url": "https://resumes.indeed.com/search?q=software+engineer&l=New+York",
+      "status": "success",
+      "load_time": 0.48460960388183594,
+      "page_title": "Just a moment...",
+      "current_url": "https://resumes.indeed.com/search?q=software+engineer&l=New+York",
+      "page_size": 18311,
+      "search_indicators": {
+        "search_results": true,
+        "no_results": false,
+        "login_required": false,
+        "access_restricted": false
+      },
+      "anti_bot_indicators": {
+        "captcha": false,
+        "blocked": false,
+        "security_check": false,
+        "unusual_traffic": false,
+        "robot_detected": true
+      }
+    },
+    {
+      "test": "job_search",
+      "url": "https://indeed.com/jobs?q=software+engineer&l=New+York",
+      "status": "success",
+      "load_time": 0.20589041709899902,
+      "page_title": "Just a moment...",
+      "current_url": "https://indeed.com/jobs?q=software+engineer&l=New+York",
+      "page_size": 45692,
+      "job_indicators": {
+        "job_results": true,
+        "no_results": false,
+        "sponsored_jobs": false
+      }
+    }
+  ],
+  "summary": {
+    "total_tests": 3,
+    "successful_tests": 3,
+    "total_requests": 3,
+    "any_anti_bot_detected": true,
+    "resume_search_accessible": true
+  }
+}
