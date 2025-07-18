@@ -1,0 +1,378 @@
+[
+  {
+    "id": "MegaDev007",
+    "name": "Software Engineer",
+    "bio": "Software Engineer - Python | Java | JS/TS | Microservices",
+    "location": null,
+    "company": "CNA Insurance",
+    "public_repos": 50,
+    "followers": 488,
+    "created_at": "2024-03-19T16:44:44Z",
+    "skills": [
+      "Java",
+      "Javascript",
+      "Html",
+      "Ruby",
+      "Typescript"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 50,
+      "total_stars": 41,
+      "languages": {
+        "java": 17,
+        "python": 2,
+        "c#": 1,
+        "html": 4,
+        "ruby": 4,
+        "javascript": 9,
+        "typescript": 3,
+        "go": 1
+      }
+    },
+    "technology_stack": {
+      "databases": {
+        "mysql": 2,
+        "postgresql": 2
+      },
+      "frontend_frameworks": {
+        "react": 4
+      },
+      "backend_frameworks": {
+        "django": 1
+      },
+      "cloud_devops": {
+        "aws": 1
+      }
+    },
+    "search_keyword": "software engineer"
+  },
+  {
+    "id": "CandyDEV1014",
+    "name": "Software Engineer",
+    "bio": null,
+    "location": null,
+    "company": null,
+    "public_repos": 116,
+    "followers": 266,
+    "created_at": "2022-01-27T14:50:23Z",
+    "skills": [
+      "Javascript",
+      "Php",
+      "Html",
+      "Css",
+      "Typescript"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 50,
+      "total_stars": 38,
+      "languages": {
+        "css": 1,
+        "html": 3,
+        "javascript": 10,
+        "typescript": 1,
+        "php": 5,
+        "twig": 1,
+        "blade": 1
+      }
+    },
+    "technology_stack": {
+      "frontend_frameworks": {
+        "react": 3,
+        "vue": 1
+      },
+      "databases": {
+        "mongodb": 2
+      }
+    },
+    "search_keyword": "software engineer"
+  },
+  {
+    "id": "leoFinzel",
+    "name": "Software Engineer",
+    "bio": "Software Engineer",
+    "location": null,
+    "company": null,
+    "public_repos": 18,
+    "followers": 582,
+    "created_at": "2023-05-02T01:35:15Z",
+    "skills": [
+      "Javascript",
+      "Typescript",
+      "Html",
+      "Python"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 18,
+      "total_stars": 88,
+      "languages": {
+        "html": 1,
+        "typescript": 3,
+        "python": 1,
+        "javascript": 10
+      }
+    },
+    "technology_stack": {
+      "backend_frameworks": {
+        "django": 1
+      },
+      "frontend_frameworks": {
+        "react": 5
+      }
+    },
+    "search_keyword": "software engineer"
+  },
+  {
+    "id": "DataSpieler12345",
+    "name": "BI - Data Analyst",
+    "bio": "I love 💙🙌 working with raw data and transforming🖥💻🖱📳⏳ it into useful information✔📊📈📉 for process optimization and decision making.👍💼⏳",
+    "location": "Germany",
+    "company": "Me!",
+    "public_repos": 31,
+    "followers": 153,
+    "created_at": "2018-11-26T20:19:49Z",
+    "skills": [
+      "Jupyter Notebook",
+      "Python",
+      "Javascript",
+      "Html",
+      "R"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 31,
+      "total_stars": 27,
+      "languages": {
+        "jupyter notebook": 8,
+        "javascript": 3,
+        "python": 6,
+        "html": 3,
+        "r": 2
+      }
+    },
+    "technology_stack": {
+      "backend_frameworks": {
+        "django": 1
+      }
+    },
+    "search_keyword": "data analyst"
+  },
+  {
+    "id": "johnpalalia",
+    "name": "Data Analyst",
+    "bio": "Experienced Data Analyst with a demonstrated history of working in diverse industries. I have many skills at my disposal to gather, analyze in depth, and report",
+    "location": "San Jose CA",
+    "company": null,
+    "public_repos": 24,
+    "followers": 133,
+    "created_at": "2019-02-09T18:15:33Z",
+    "skills": [
+      "Jupyter Notebook",
+      "Javascript",
+      "Html",
+      "Css",
+      "Python"
+    ],
+    "skill_proficiency": "advanced",
+    "github_stats": {
+      "total_repos": 24,
+      "total_stars": 9,
+      "languages": {
+        "javascript": 5,
+        "jupyter notebook": 10,
+        "css": 1,
+        "html": 3,
+        "python": 1,
+        "visual basic": 1
+      }
+    },
+    "technology_stack": {
+      "backend_frameworks": {
+        "flask": 1
+      },
+      "databases": {
+        "mysql": 1
+      }
+    },
+    "search_keyword": "data analyst"
+  },
+  {
+    "id": "AlexTheAnalyst",
+    "name": "Alex The Analyst",
+    "bio": "Helping you become a Data Analyst one code at a time. All code for Youtube Channel Alex The Analyst. ",
+    "location": null,
+    "company": null,
+    "public_repos": 15,
+    "followers": 18047,
+    "created_at": "2020-01-28T03:49:40Z",
+    "skills": [
+      "Jupyter Notebook",
+      "Css",
+      "Html",
+      "Tsql"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 15,
+      "total_stars": 5117,
+      "languages": {
+        "jupyter notebook": 5,
+        "css": 2,
+        "html": 1,
+        "tsql": 1
+      }
+    },
+    "technology_stack": {
+      "databases": {
+        "mysql": 1
+      }
+    },
+    "search_keyword": "data analyst"
+  },
+  {
+    "id": "manager",
+    "name": "Wolf Alexanyan",
+    "bio": "product and operations | author of uxcore.io",
+    "location": null,
+    "company": null,
+    "public_repos": 2,
+    "followers": 3,
+    "created_at": "2018-02-06T12:36:37Z",
+    "skills": [],
+    "skill_proficiency": "beginner",
+    "github_stats": {
+      "total_repos": 2,
+      "total_stars": 0,
+      "languages": {}
+    },
+    "technology_stack": {},
+    "search_keyword": "product manager"
+  },
+  {
+    "id": "DanielRosenwasser",
+    "name": "Daniel Rosenwasser",
+    "bio": "Principal Product Manager of TypeScript",
+    "location": "Seattle, WA",
+    "company": "@Microsoft",
+    "public_repos": 180,
+    "followers": 2405,
+    "created_at": "2011-08-11T02:09:39Z",
+    "skills": [
+      "Typescript",
+      "Javascript",
+      "Html",
+      "C++",
+      "Powershell"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 50,
+      "total_stars": 26,
+      "languages": {
+        "typescript": 10,
+        "java": 1,
+        "javascript": 8,
+        "c++": 2,
+        "html": 3,
+        "assembly": 1,
+        "powershell": 2,
+        "c#": 1
+      }
+    },
+    "technology_stack": {
+      "frontend_frameworks": {
+        "angular": 1,
+        "react": 3
+      },
+      "backend_frameworks": {
+        "express": 2
+      }
+    },
+    "search_keyword": "product manager"
+  },
+  {
+    "id": "yuiseki",
+    "name": "yuiseki",
+    "bio": "Product manager & Software engineer",
+    "location": "Taito, Tokyo, Japan",
+    "company": "Yuiseki Inc.",
+    "public_repos": 563,
+    "followers": 629,
+    "created_at": "2008-09-20T16:48:29Z",
+    "skills": [
+      "Typescript",
+      "Javascript",
+      "Ruby",
+      "Python",
+      "Jupyter Notebook"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 50,
+      "total_stars": 78,
+      "languages": {
+        "typescript": 12,
+        "javascript": 6,
+        "ruby": 6,
+        "jupyter notebook": 1,
+        "css": 1,
+        "d": 1,
+        "python": 6,
+        "java": 1,
+        "makefile": 1,
+        "svelte": 1
+      }
+    },
+    "technology_stack": {
+      "cloud_devops": {
+        "aws": 1
+      },
+      "databases": {
+        "mongodb": 2
+      }
+    },
+    "search_keyword": "product manager"
+  },
+  {
+    "id": "developerrahulofficial",
+    "name": "Developer Rahul",
+    "bio": "Full Stack Developer👨🏻‍💻\r\nI dream bug 🪲 and live big 🔥😎",
+    "location": "New Delhi, India",
+    "company": null,
+    "public_repos": 84,
+    "followers": 4421,
+    "created_at": "2021-04-28T05:17:14Z",
+    "skills": [
+      "Javascript",
+      "Typescript",
+      "Python",
+      "Css",
+      "Html"
+    ],
+    "skill_proficiency": "expert",
+    "github_stats": {
+      "total_repos": 50,
+      "total_stars": 1236,
+      "languages": {
+        "python": 8,
+        "typescript": 9,
+        "css": 5,
+        "javascript": 15,
+        "vue": 1,
+        "dart": 1,
+        "html": 5
+      }
+    },
+    "technology_stack": {
+      "backend_frameworks": {
+        "django": 1
+      },
+      "frontend_frameworks": {
+        "react": 1
+      }
+    },
+    "search_keyword": "developer"
+  }
+]
