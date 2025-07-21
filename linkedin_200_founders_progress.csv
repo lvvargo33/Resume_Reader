@@ -1,7 +1,7 @@
 Industry,Target,US_Target,Canada_Target,Collected,US_Collected,Canada_Collected,Percentage,Status
 Food & Restaurant,24,22,2,24,22,2,100.0,Complete
 Retail & E-commerce,22,20,2,22,20,2,100.0,Complete
-Business Services,22,20,2,0,0,0,0.0,Not Started
+Business Services,22,20,2,22,20,2,100.0,Complete
 "Health, Beauty & Fitness",18,16,2,0,0,0,0.0,Not Started
 Construction & Contracting,16,14,2,0,0,0,0.0,Not Started
 Other Services,16,14,2,0,0,0,0.0,Not Started
