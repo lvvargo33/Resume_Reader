@@ -1,33 +1,44 @@
 {
-  "name": "Startup Closure Detection - Fixed",
+  "meta": {
+    "instanceId": "your-instance-id"
+  },
   "nodes": [
     {
       "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [-420, 0],
-      "id": "manual-trigger-test",
-      "name": "Manual Trigger (for testing)"
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Enhanced Search Controller with debugging\nconsole.log(\"=== SEARCH CONTROLLER DEBUG ===\");\nconsole.log(\"Raw input:\", JSON.stringify($input.first().json, null, 2));\n\nconst inputData = $input.first().json;\nconst company_name = inputData.company_name;\n\nconsole.log(\"Extracted company_name:\", company_name);\n\nif (!company_name) {\n    console.log(\"ERROR: No company_name found in input\");\n    console.log(\"Available keys:\", Object.keys(inputData));\n    return [{\n        json: {\n            error: \"missing_company_name\",\n            final_status: \"error\",\n            debug_input: inputData,\n            available_keys: Object.keys(inputData)\n        }\n    }];\n}\n\n// Multiple search strategies to try\nconst searchQueries = [\n    // Primary search - broad closure terms\n    `\"${company_name}\" shutdown OR closed OR acquired OR ceased operations`,\n    \n    // Secondary search - more specific terms\n    `\"${company_name}\" bankruptcy OR defunct OR \"out of business\" OR discontinued`,\n    \n    // Tertiary search - acquisition focused\n    `\"${company_name}\" acquired by OR \"bought by\" OR merger`,\n    \n    // Company status search\n    `\"${company_name}\" company status OR \"still operating\" OR active`,\n    \n    // News search\n    `\"${company_name}\" news 2023 OR 2024 OR 2025`\n];\n\nconsole.log(`Setting up multi-strategy search for: ${company_name}`);\nconsole.log(`Primary search query: ${searchQueries[0]}`);\n\n// Return the first search query to start with\nconst result = {\n    company_name: company_name,\n    founder: inputData.founder,\n    original_data: inputData.original_data,\n    search_query: searchQueries[0],\n    all_search_queries: searchQueries,\n    current_query_index: 0\n};\n\nconsole.log(\"Search Controller output:\", JSON.stringify(result, null, 2));\nconsole.log(\"=== END DEBUG ===\");\n\nreturn [{ json: result }];"
+        "jsCode": "// Enhanced Search Controller with debugging\nconsole.log(\"=== SEARCH CONTROLLER DEBUG ===\");\nconsole.log(\"Raw input:\", JSON.stringify($input.first().json, null, 2));\n\nconst inputData = $input.first().json;\nconst company_name = inputData.company_name;\n\nconsole.log(\"Extracted company_name:\", company_name);\n\nif (!company_name) {\n    console.log(\"ERROR: No company_name found in input\");\n    console.log(\"Available keys:\", Object.keys(inputData));\n    return [{\n        json: {\n            error: \"missing_company_name\",\n            final_status: \"error\",\n            debug_input: inputData,\n            available_keys: Object.keys(inputData)\n        }\n    }];\n}\n\n// Multiple search strategies to try\nconst searchQueries = [\n    `\"${company_name}\" shutdown OR closed OR acquired OR ceased operations`,\n    `\"${company_name}\" bankruptcy OR defunct OR \"out of business\" OR discontinued`,\n    `\"${company_name}\" acquired by OR \"bought by\" OR merger`,\n    `\"${company_name}\" company status OR \"still operating\" OR active`,\n    `\"${company_name}\" news 2023 OR 2024 OR 2025`\n];\n\nconsole.log(`Setting up multi-strategy search for: ${company_name}`);\nconsole.log(`Primary search query: ${searchQueries[0]}`);\n\nconst result = {\n    company_name: company_name,\n    founder: inputData.founder,\n    original_data: inputData.original_data,\n    search_query: searchQueries[0],\n    all_search_queries: searchQueries,\n    current_query_index: 0\n};\n\nconsole.log(\"Search Controller output:\", JSON.stringify(result, null, 2));\nconsole.log(\"=== END DEBUG ===\");\n\nreturn [{ json: result }];"
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [-220, 0],
       "id": "search-controller",
-      "name": "Search Controller"
+      "name": "Search Controller",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Debug what data is flowing to Google Search\nconst inputData = $input.first().json;\n\nconsole.log(\"=== DEBUG: Data going to Google Search ===\");\nconsole.log(\"Full input data:\", JSON.stringify(inputData, null, 2));\nconsole.log(\"search_query value:\", inputData.search_query);\nconsole.log(\"search_query type:\", typeof inputData.search_query);\nconsole.log(\"=== END DEBUG ===\");\n\n// Pass through the data unchanged\nreturn [{ json: inputData }];"
+        "jsCode": "// Debug what data is flowing to Google Search\nconst inputData = $input.first().json;\n\nconsole.log(\"=== DEBUG: Data going to Google Search ===\");\nconsole.log(\"Full input data:\", JSON.stringify(inputData, null, 2));\nconsole.log(\"search_query value:\", inputData.search_query);\nconsole.log(\"search_query type:\", typeof inputData.search_query);\nconsole.log(\"=== END DEBUG ===\");\n\nreturn [{ json: inputData }];"
       },
+      "id": "debug-data",
+      "name": "Debug Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-20, 0],
-      "id": "debug-data",
-      "name": "Debug Data"
+      "position": [
+        680,
+        300
+      ]
     },
     {
       "parameters": {
@@ -52,21 +63,27 @@
         },
         "options": {}
       },
+      "id": "google-search",
+      "name": "Google Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [180, 0],
-      "id": "google-search-http",
-      "name": "Google Search (HTTP)"
+      "position": [
+        900,
+        300
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// SerpApi parser - enhanced version\nconst serpResults = $input.first().json;\nconst previousData = $node[\"Debug Data\"].json;\n\nconsole.log(\"=== GOOGLE PARSER DEBUG ===\");\nconsole.log(\"SerpApi response keys:\", Object.keys(serpResults));\nconsole.log(\"Previous data:\", JSON.stringify(previousData, null, 2));\n\n// Extract company name from previous data\nconst companyName = previousData.company_name || 'Unknown Company';\nconst searchQuery = previousData.search_query || '';\n\nlet results = [];\n\n// Extract organic results from SerpApi response\nif (serpResults.organic_results && serpResults.organic_results.length > 0) {\n    results = serpResults.organic_results.slice(0, 8).map(result => ({\n        title: result.title || 'No title',\n        url: result.link || 'No URL',\n        snippet: result.snippet || 'No snippet',\n        source: \"SerpApi_Google\"\n    }));\n} else if (serpResults.news_results && serpResults.news_results.length > 0) {\n    // Also check news results\n    results = serpResults.news_results.slice(0, 5).map(result => ({\n        title: result.title || 'No title',\n        url: result.link || 'No URL',\n        snippet: result.snippet || 'No snippet',\n        source: \"SerpApi_Google_News\"\n    }));\n}\n\nconsole.log(`SerpApi: Found ${results.length} total results`);\nconsole.log(`Company name: ${companyName}`);\nconsole.log(`Search query was: ${searchQuery}`);\n\n// Log URLs found for debugging\nconsole.log(\"URLs found:\", results.map(r => r.url));\n\n// Less aggressive filtering - check for company relevance OR closure keywords\nconst qualityResults = results.filter(r => {\n    const title = (r.title || '').toLowerCase();\n    const snippet = (r.snippet || '').toLowerCase();\n    const text = title + ' ' + snippet;\n    const companyFirstWord = companyName ? companyName.toLowerCase().split(' ')[0] : '';\n    const companySecondWord = companyName ? companyName.toLowerCase().split(' ')[1] : '';\n    \n    // Check if content is relevant to company OR contains closure keywords\n    const hasCompanyName = text.includes(companyFirstWord) || \n                          (companySecondWord && text.includes(companySecondWord)) ||\n                          text.includes(companyName.toLowerCase());\n    \n    const hasClosureKeywords = text.includes('shutdown') ||\n                              text.includes('acquired') ||\n                              text.includes('closed') ||\n                              text.includes('ceased') ||\n                              text.includes('bankruptcy') ||\n                              text.includes('defunct') ||\n                              text.includes('discontinued') ||\n                              text.includes('shut down') ||\n                              text.includes('out of business');\n    \n    return hasCompanyName || hasClosureKeywords;\n});\n\nconsole.log(`Found ${qualityResults.length} quality results out of ${results.length} total`);\n\n// Always proceed with whatever results we have (don't be too picky)\nconst resultsToUse = qualityResults.length > 0 ? qualityResults : results.slice(0, 3);\n\nif (resultsToUse.length > 0) {\n    console.log(\"SerpApi: Proceeding to Claude with results\");\n    return resultsToUse.map(result => ({\n        json: {\n            title: result.title,\n            url: result.url,\n            snippet: result.snippet,\n            source: result.source,\n            company_name: companyName,\n            engine_used: \"SerpApi_Google\",\n            search_query: searchQuery\n        }\n    }));\n} else {\n    console.log(\"SerpApi: No results found\");\n    return [{\n        json: {\n            company_name: companyName,\n            search_query: searchQuery,\n            error: \"no_results_found\",\n            source: \"SerpApi_Google\",\n            title: \"No results\",\n            url: \"No URL\",\n            snippet: \"No results found\"\n        }\n    }];\n}\n\nconsole.log(\"=== END GOOGLE PARSER DEBUG ===\");"
+        "jsCode": "// SerpApi parser - enhanced version\nconst serpResults = $input.first().json;\nconst previousData = $node[\"Debug Data\"].json;\n\nconsole.log(\"=== GOOGLE PARSER DEBUG ===\");\nconsole.log(\"SerpApi response keys:\", Object.keys(serpResults));\n\nconst companyName = previousData.company_name || 'Unknown Company';\nconst searchQuery = previousData.search_query || '';\n\nlet results = [];\n\nif (serpResults.organic_results && serpResults.organic_results.length > 0) {\n    results = serpResults.organic_results.slice(0, 8).map(result => ({\n        title: result.title || 'No title',\n        url: result.link || 'No URL',\n        snippet: result.snippet || 'No snippet',\n        source: \"SerpApi_Google\"\n    }));\n} else if (serpResults.news_results && serpResults.news_results.length > 0) {\n    results = serpResults.news_results.slice(0, 5).map(result => ({\n        title: result.title || 'No title',\n        url: result.link || 'No URL',\n        snippet: result.snippet || 'No snippet',\n        source: \"SerpApi_Google_News\"\n    }));\n}\n\nconsole.log(`SerpApi: Found ${results.length} total results`);\nconsole.log(\"URLs found:\", results.map(r => r.url));\n\nconst qualityResults = results.filter(r => {\n    const title = (r.title || '').toLowerCase();\n    const snippet = (r.snippet || '').toLowerCase();\n    const text = title + ' ' + snippet;\n    const companyFirstWord = companyName ? companyName.toLowerCase().split(' ')[0] : '';\n    \n    const hasCompanyName = text.includes(companyFirstWord) || text.includes(companyName.toLowerCase());\n    \n    const hasClosureKeywords = text.includes('shutdown') ||\n                              text.includes('acquired') ||\n                              text.includes('closed') ||\n                              text.includes('ceased') ||\n                              text.includes('bankruptcy') ||\n                              text.includes('defunct');\n    \n    return hasCompanyName || hasClosureKeywords;\n});\n\nconst resultsToUse = qualityResults.length > 0 ? qualityResults : results.slice(0, 3);\n\nif (resultsToUse.length > 0) {\n    return resultsToUse.map(result => ({\n        json: {\n            title: result.title,\n            url: result.url,\n            snippet: result.snippet,\n            source: result.source,\n            company_name: companyName,\n            engine_used: \"SerpApi_Google\",\n            search_query: searchQuery\n        }\n    }));\n} else {\n    return [{\n        json: {\n            company_name: companyName,\n            search_query: searchQuery,\n            error: \"no_results_found\",\n            source: \"SerpApi_Google\",\n            title: \"No results\",\n            url: \"No URL\",\n            snippet: \"No results found\"\n        }\n    }];\n}"
       },
+      "id": "google-parser",
+      "name": "Google Parser",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [380, 0],
-      "id": "google-parser",
-      "name": "Google Parser"
+      "position": [
+        1120,
+        300
+      ]
     },
     {
       "parameters": {
@@ -93,59 +110,44 @@
         "specifyBody": "json",
         "jsonBody": "={\n  \"model\": \"claude-3-5-sonnet-20241022\",\n  \"max_tokens\": 1000,\n  \"messages\": [\n    {\n      \"role\": \"user\", \n      \"content\": \"Analyze this search result about a company and extract closure/status information:\\n\\nCompany: {{ $json.company_name }}\\nTitle: {{ $json.title }}\\nURL: {{ $json.url }}\\nSnippet: {{ $json.snippet || 'No snippet available' }}\\nSource: {{ $json.source }}\\n\\nCarefully analyze the content for information about company closure, acquisition, shutdown, or current status. Look for specific dates, acquisition details, or business status changes.\\n\\nReturn ONLY valid JSON with these exact fields:\\n{\\n  \\\"company_name\\\": \\\"exact company name\\\",\\n  \\\"closure_date\\\": \\\"YYYY-MM-DD format or null if not found\\\",\\n  \\\"status\\\": \\\"closed/active/acquired/unknown\\\", \\n  \\\"confidence\\\": \\\"high/medium/low\\\",\\n  \\\"source_urls\\\": [\\\"{{ $json.url }}\\\"],\\n  \\\"notes\\\": \\\"brief explanation of findings\\\"\\n}\\n\\nDO NOT include any text outside the JSON object. If no closure information is found, set closure_date to null and status to 'active' or 'unknown' based on available information.\"\n    }\n  ]\n}"
       },
+      "id": "claude-api",
+      "name": "Claude API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [580, 0],
-      "id": "claude-api",
-      "name": "Claude API"
+      "position": [
+        1340,
+        300
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Parse Claude Response and preserve original data\nconst claudeResponse = $input.first().json;\nconst originalInput = $node[\"Google Parser\"].item.json;\n\nconsole.log(\"=== PARSE RESPONSE DEBUG ===\");\nconsole.log(\"Claude response status:\", claudeResponse.status || 'no status');\nconsole.log(\"Original input to Claude:\", originalInput);\n\ntry {\n    // Parse Claude's JSON response\n    const claudeText = claudeResponse.content[0].text;\n    console.log(\"Raw Claude text:\", claudeText);\n    \n    // Clean up the response text (remove any markdown formatting)\n    const cleanText = claudeText.replace(/```json\\n?/g, \"\").replace(/```\\n?/g, \"\").trim();\n    \n    const parsedData = JSON.parse(cleanText);\n    console.log(\"Parsed Claude data:\", parsedData);\n    \n    // Combine Claude's analysis with original search data\n    const result = {\n        // From Claude's analysis\n        company: parsedData.company_name || \"Unknown\",\n        closure_date: parsedData.closure_date,\n        status: parsedData.status || \"unknown\", \n        confidence: parsedData.confidence || \"low\",\n        claude_notes: parsedData.notes || \"No notes provided\",\n        \n        // From original search data\n        source_url: originalInput.url || \"No URL\",\n        source_title: originalInput.title || \"No title\",\n        source_snippet: originalInput.snippet || \"No snippet\",\n        search_query: originalInput.search_query || \"No query\",\n        engine_used: originalInput.engine_used || \"Unknown\",\n        \n        // Additional metadata\n        processed_successfully: true,\n        raw_claude_response: claudeText\n    };\n    \n    console.log(\"Final result:\", result);\n    return [{ json: result }];\n    \n} catch (error) {\n    console.error(\"Error parsing Claude response:\", error);\n    \n    // Return error result with original data preserved\n    return [{\n        json: {\n            company: \"Unknown\",\n            closure_date: null,\n            status: \"error\",\n            confidence: \"low\", \n            claude_notes: `Error parsing Claude response: ${error.message}`,\n            source_url: originalInput.url || \"No URL\",\n            source_title: originalInput.title || \"No title\", \n            source_snippet: originalInput.snippet || \"No snippet\",\n            search_query: originalInput.search_query || \"No query\",\n            engine_used: originalInput.engine_used || \"Unknown\",\n            processed_successfully: false,\n            raw_claude_response: claudeResponse.content?.[0]?.text || \"No response\",\n            error_details: error.message\n        }\n    }];\n}\n\nconsole.log(\"=== END PARSE RESPONSE DEBUG ===\");"
+        "jsCode": "// Parse Claude Response and preserve original data\nconst claudeResponse = $input.first().json;\nconst originalInput = $node[\"Google Parser\"].item.json;\n\nconsole.log(\"=== PARSE RESPONSE DEBUG ===\");\n\ntry {\n    const claudeText = claudeResponse.content[0].text;\n    console.log(\"Raw Claude text:\", claudeText);\n    \n    const cleanText = claudeText.replace(/```json\\n?/g, \"\").replace(/```\\n?/g, \"\").trim();\n    const parsedData = JSON.parse(cleanText);\n    \n    const result = {\n        company: parsedData.company_name || \"Unknown\",\n        closure_date: parsedData.closure_date,\n        status: parsedData.status || \"unknown\", \n        confidence: parsedData.confidence || \"low\",\n        claude_notes: parsedData.notes || \"No notes provided\",\n        source_url: originalInput.url || \"No URL\",\n        source_title: originalInput.title || \"No title\",\n        source_snippet: originalInput.snippet || \"No snippet\",\n        search_query: originalInput.search_query || \"No query\",\n        engine_used: originalInput.engine_used || \"Unknown\",\n        processed_successfully: true,\n        raw_claude_response: claudeText\n    };\n    \n    return [{ json: result }];\n    \n} catch (error) {\n    console.error(\"Error parsing Claude response:\", error);\n    \n    return [{\n        json: {\n            company: \"Unknown\",\n            closure_date: null,\n            status: \"error\",\n            confidence: \"low\", \n            claude_notes: `Error parsing Claude response: ${error.message}`,\n            source_url: originalInput.url || \"No URL\",\n            source_title: originalInput.title || \"No title\", \n            source_snippet: originalInput.snippet || \"No snippet\",\n            search_query: originalInput.search_query || \"No query\",\n            engine_used: originalInput.engine_used || \"Unknown\",\n            processed_successfully: false,\n            raw_claude_response: claudeResponse.content?.[0]?.text || \"No response\",\n            error_details: error.message\n        }\n    }];\n}"
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [780, 0],
       "id": "parse-response",
-      "name": "Parse Response"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Consolidate multiple Claude responses into single result with source URLs\nconst results = $input.all();\n\nconsole.log(`=== CONSOLIDATE DEBUG ===`);\nconsole.log(`Processing ${results.length} results`);\n\nif (!results || results.length === 0) {\n    return [{\n        json: {\n            error: \"No results to consolidate\",\n            company: \"Unknown\",\n            closure_date: null,\n            status: \"unknown\",\n            confidence: \"low\",\n            sources_analyzed: 0,\n            source_urls: [],\n            notes: \"No data received from previous nodes\"\n        }\n    }];\n}\n\n// Extract all the data from parsed responses\nconst companyName = results[0].json.company || \"Unknown\";\nconst allDates = results.map(r => r.json.closure_date).filter(d => d && d !== \"null\" && d !== null);\nconst allStatuses = results.map(r => r.json.status).filter(s => s && s !== \"null\" && s !== null && s !== \"error\");\nconst allConfidences = results.map(r => r.json.confidence);\n\n// Get source URLs from the parsed responses\nconst sourceUrls = results.map(r => r.json.source_url).filter(url => url && url !== \"No URL\");\nconst sourceTitles = results.map(r => r.json.source_title).filter(title => title && title !== \"No title\");\nconst searchQueries = results.map(r => r.json.search_query).filter(q => q && q !== \"No query\");\n\nconsole.log(\"Source URLs found:\", sourceUrls);\nconsole.log(\"Source titles found:\", sourceTitles);\n\n// Remove duplicates from URLs\nconst uniqueSourceUrls = [...new Set(sourceUrls)];\n\n// Find most common closure date\nlet mostCommonDate = null;\nif (allDates.length > 0) {\n    const dateCounts = {};\n    allDates.forEach(date => {\n        dateCounts[date] = (dateCounts[date] || 0) + 1;\n    });\n    \n    mostCommonDate = Object.keys(dateCounts).reduce((a, b) => \n        dateCounts[a] > dateCounts[b] ? a : b, null\n    );\n}\n\n// Find most common status\nlet mostCommonStatus = \"unknown\";\nif (allStatuses.length > 0) {\n    const statusCounts = {};\n    allStatuses.forEach(status => {\n        statusCounts[status] = (statusCounts[status] || 0) + 1;\n    });\n    \n    mostCommonStatus = Object.keys(statusCounts).reduce((a, b) => \n        statusCounts[a] > statusCounts[b] ? a : b, \"unknown\"\n    );\n}\n\n// Determine overall confidence\nconst successfulResults = results.filter(r => r.json.processed_successfully !== false);\nconst highConfCount = allConfidences.filter(c => c === \"high\").length;\nconst totalCount = successfulResults.length;\n\nconst overallConfidence = totalCount === 0 ? \"low\" :\n                         highConfCount >= (totalCount * 0.7) ? \"high\" : \n                         highConfCount >= (totalCount * 0.5) ? \"medium\" : \"low\";\n\n// Check for date conflicts\nconst uniqueDates = [...new Set(allDates)];\nconst hasDateConflict = uniqueDates.length > 1;\n\n// Create summary of findings\nconst claudeNotes = results.map(r => r.json.claude_notes).filter(n => n && n !== \"No notes provided\");\nconst allNotes = claudeNotes.length > 0 ? claudeNotes.join(\" | \") : \"No specific notes from analysis\";\n\n// Final consolidated result\nconst consolidatedResult = {\n    company: companyName,\n    closure_date: mostCommonDate,\n    status: mostCommonStatus,\n    confidence: overallConfidence,\n    sources_analyzed: totalCount,\n    source_urls: uniqueSourceUrls,\n    source_titles: sourceTitles,\n    search_queries_used: [...new Set(searchQueries)],\n    date_conflict: hasDateConflict,\n    conflicting_dates: hasDateConflict ? uniqueDates : null,\n    processing_errors: results.filter(r => r.json.processed_successfully === false).length,\n    detailed_notes: allNotes,\n    notes: totalCount === 0 ? \"No valid responses processed\" :\n           hasDateConflict ? \n           `Date conflict found: ${uniqueDates.join(\" vs \")}. Using most common: ${mostCommonDate}` :\n           mostCommonDate ? \n           `Found closure date: ${mostCommonDate} (confidence: ${overallConfidence})` :\n           `No closure date found across ${totalCount} sources. Status: ${mostCommonStatus}`\n};\n\nconsole.log(\"Final consolidated result:\", consolidatedResult);\nconsole.log(\"=== END CONSOLIDATE DEBUG ===\");\n\nreturn [{ json: consolidatedResult }];"
-      },
+      "name": "Parse Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [980, 0],
-      "id": "consolidate",
-      "name": "Consolidate"
+      "position": [
+        1560,
+        300
+      ]
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "startup-closure-detection",
-        "responseMode": "lastNode",
-        "responseData": "allEntries",
-        "options": {}
+        "jsCode": "// Consolidate multiple Claude responses into single result with source URLs\nconst results = $input.all();\n\nconsole.log(`=== CONSOLIDATE DEBUG ===`);\nconsole.log(`Processing ${results.length} results`);\n\nif (!results || results.length === 0) {\n    return [{\n        json: {\n            error: \"No results to consolidate\",\n            company: \"Unknown\",\n            closure_date: null,\n            status: \"unknown\",\n            confidence: \"low\",\n            sources_analyzed: 0,\n            source_urls: [],\n            notes: \"No data received from previous nodes\"\n        }\n    }];\n}\n\nconst companyName = results[0].json.company || \"Unknown\";\nconst allDates = results.map(r => r.json.closure_date).filter(d => d && d !== \"null\" && d !== null);\nconst allStatuses = results.map(r => r.json.status).filter(s => s && s !== \"null\" && s !== null && s !== \"error\");\nconst allConfidences = results.map(r => r.json.confidence);\n\nconst sourceUrls = results.map(r => r.json.source_url).filter(url => url && url !== \"No URL\");\nconst sourceTitles = results.map(r => r.json.source_title).filter(title => title && title !== \"No title\");\nconst searchQueries = results.map(r => r.json.search_query).filter(q => q && q !== \"No query\");\n\nconst uniqueSourceUrls = [...new Set(sourceUrls)];\n\nlet mostCommonDate = null;\nif (allDates.length > 0) {\n    const dateCounts = {};\n    allDates.forEach(date => {\n        dateCounts[date] = (dateCounts[date] || 0) + 1;\n    });\n    mostCommonDate = Object.keys(dateCounts).reduce((a, b) => \n        dateCounts[a] > dateCounts[b] ? a : b, null\n    );\n}\n\nlet mostCommonStatus = \"unknown\";\nif (allStatuses.length > 0) {\n    const statusCounts = {};\n    allStatuses.forEach(status => {\n        statusCounts[status] = (statusCounts[status] || 0) + 1;\n    });\n    mostCommonStatus = Object.keys(statusCounts).reduce((a, b) => \n        statusCounts[a] > statusCounts[b] ? a : b, \"unknown\"\n    );\n}\n\nconst successfulResults = results.filter(r => r.json.processed_successfully !== false);\nconst highConfCount = allConfidences.filter(c => c === \"high\").length;\nconst totalCount = successfulResults.length;\n\nconst overallConfidence = totalCount === 0 ? \"low\" :\n                         highConfCount >= (totalCount * 0.7) ? \"high\" : \n                         highConfCount >= (totalCount * 0.5) ? \"medium\" : \"low\";\n\nconst uniqueDates = [...new Set(allDates)];\nconst hasDateConflict = uniqueDates.length > 1;\n\nconst claudeNotes = results.map(r => r.json.claude_notes).filter(n => n && n !== \"No notes provided\");\nconst allNotes = claudeNotes.length > 0 ? claudeNotes.join(\" | \") : \"No specific notes from analysis\";\n\nconst consolidatedResult = {\n    company: companyName,\n    closure_date: mostCommonDate,\n    status: mostCommonStatus,\n    confidence: overallConfidence,\n    sources_analyzed: totalCount,\n    source_urls: uniqueSourceUrls,\n    source_titles: sourceTitles,\n    search_queries_used: [...new Set(searchQueries)],\n    date_conflict: hasDateConflict,\n    conflicting_dates: hasDateConflict ? uniqueDates : null,\n    processing_errors: results.filter(r => r.json.processed_successfully === false).length,\n    detailed_notes: allNotes,\n    notes: totalCount === 0 ? \"No valid responses processed\" :\n           hasDateConflict ? \n           `Date conflict found: ${uniqueDates.join(\" vs \")}. Using most common: ${mostCommonDate}` :\n           mostCommonDate ? \n           `Found closure date: ${mostCommonDate} (confidence: ${overallConfidence})` :\n           `No closure date found across ${totalCount} sources. Status: ${mostCommonStatus}`\n};\n\nconsole.log(\"Final consolidated result:\", consolidatedResult);\n\nreturn [{ json: consolidatedResult }];"
       },
-      "type": "n8n-nodes-base.webhook",
+      "id": "consolidate",
+      "name": "Consolidate",
+      "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-420, 200],
-      "id": "webhook-production",
-      "name": "Webhook (for production)"
+      "position": [
+        1780,
+        300
+      ]
     }
   ],
-  "pinData": {
-    "Manual Trigger (for testing)": [
-      {
-        "json": {
-          "company_name": "Vine",
-          "founder": "Dom Hofmann"
-        }
-      }
-    ]
-  },
   "connections": {
-    "Manual Trigger (for testing)": {
+    "Manual Trigger": {
       "main": [
         [
           {
@@ -171,14 +173,14 @@
       "main": [
         [
           {
-            "node": "Google Search (HTTP)",
+            "node": "Google Search",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Search (HTTP)": {
+    "Google Search": {
       "main": [
         [
           {
@@ -221,25 +223,22 @@
           }
         ]
       ]
-    },
-    "Webhook (for production)": {
-      "main": [
-        [
-          {
-            "node": "Search Controller",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+    }
+  },
+  "pinData": {
+    "Manual Trigger": [
+      {
+        "json": {
+          "company_name": "Vine",
+          "founder": "Dom Hofmann"
+        }
+      }
     ]
   },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "meta": {
-    "templateCredsSetupCompleted": false
-  },
-  "tags": []
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-01T15:00:00.000Z",
+  "versionId": "1"
 }
